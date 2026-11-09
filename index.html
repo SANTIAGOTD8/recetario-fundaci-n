@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Recetario Aventura</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🥕%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/styles.css">
+</head><body><main>
+<h1>🥕 Recetario Aventura 🍅</h1>
+<p class="mut">Fundación Por un Mañana Mejor · La Gaitana, Suba</p>
+<section id="su"><p>Tira el dado, cae en una fruta o verdura y descubre cómo prepararla. ¿Cuántos jugadores?</p>
+<div><button data-n="1">1</button><button data-n="2" class="on">2</button><button data-n="3">3</button><button data-n="4">4</button></div>
+<button class="go" id="gob">¡Empezar!</button></section>
+<section id="gm" hidden>
+<p id="st" aria-live="polite"></p>
+<div class="bw"><div id="g"></div><svg id="ov" viewBox="0 0 100 100"></svg></div>
+<div><button class="go" id="rb">Tirar dado</button><span id="dice" class="dc">🎲</span></div>
+<p class="mut">Casilla verde = ¡receta! · 🪜 sube · 🐛 baja</p>
+<p id="pl" class="mut"></p><button id="bkb"></button><button id="nw">Nuevo juego</button>
+</section></main>
+<div id="md" hidden><div id="mc" role="dialog" aria-modal="true" aria-label="Receta"><div id="mb"></div></div></div>
+<script src="js/data.js"></script>
+<script src="js/game.js"></script>
+</body></html>

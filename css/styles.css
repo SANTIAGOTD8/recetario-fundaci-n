@@ -1,0 +1,57 @@
+:root{
+  --bg:#f3f0e8;--card:#fffdf8;--ink:#2d2b26;--mut:#78725f;
+  --cell:#ebe5d4;--food:#cddab9;--ln:#d8cfb8;
+  --ac:#44703f;--on-ac:#fff;--sh:0 1px 2px rgba(60,50,30,.12);
+  color-scheme:light;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1a1c17;--card:#252820;--ink:#ebe7d8;--mut:#a7a28e;
+  --cell:#2c2f26;--food:#36482f;--ln:#3d4034;--ac:#8bb37f;--on-ac:#14170f;--sh:none;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1a1c17;--card:#252820;--ink:#ebe7d8;--mut:#a7a28e;
+  --cell:#2c2f26;--food:#36482f;--ln:#3d4034;--ac:#8bb37f;--on-ac:#14170f;--sh:none;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-rounded,"SF Pro Rounded","Trebuchet MS",system-ui,sans-serif;text-align:center;line-height:1.45}
+main{max-width:600px;margin:auto;padding:14px 12px 28px}
+h1{margin:6px 0 2px;font-size:1.55rem;font-weight:700;letter-spacing:-.01em}
+h2{margin:6px 0}h3{margin:4px 0 8px;font-weight:600}
+.mut{color:var(--mut);font-size:.9rem;margin:6px 0}
+
+/* Botones */
+button{font:inherit;font-weight:600;color:var(--ink);background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:.55em 1.1em;margin:4px;cursor:pointer;box-shadow:var(--sh);transition:transform .08s,filter .15s}
+button:hover{filter:brightness(.97)}
+button:active{transform:scale(.97)}
+button:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+button.on,.go{background:var(--ac);color:var(--on-ac);border-color:var(--ac)}
+button.on:hover,.go:hover{filter:brightness(1.08)}
+.go{font-size:1.1rem;padding:.6em 1.5em}
+
+/* Tablero */
+.bw{position:relative;width:100%;aspect-ratio:1;margin:10px auto;border:1px solid var(--ln);border-radius:14px;overflow:hidden;background:var(--cell)}
+#g{display:grid;grid-template:repeat(10,1fr)/repeat(10,1fr);height:100%}
+#ov{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.c{border:.5px solid var(--ln);background:var(--cell);position:relative;display:flex;align-items:center;justify-content:center;font-size:clamp(13px,5vw,28px);overflow:hidden}
+.c.f{background:var(--food)}
+.c small{position:absolute;top:1px;left:3px;font-size:clamp(7px,2vw,10px);color:var(--mut);opacity:.8}
+.ts{position:absolute;bottom:0;right:1px;font-size:clamp(9px,3.2vw,18px);line-height:1;display:flex}
+#dice{font-size:1.8rem;margin:0 8px}
+.dc{font-size:3rem;display:inline-block;line-height:1;vertical-align:middle}
+.rl{animation:rl .6s}@keyframes rl{to{transform:rotate(720deg)}}
+
+/* Receta */
+[hidden]{display:none!important}
+#md{position:fixed;inset:0;background:rgba(25,24,18,.55);display:flex;align-items:center;justify-content:center;padding:14px}
+#mc{background:var(--card);border-radius:20px;max-width:440px;width:100%;max-height:88vh;overflow:auto;padding:20px 18px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+.big{font-size:3.2rem;line-height:1.1}
+ol{text-align:left;padding-left:1.4em}li{margin:6px 0}
+.bk{display:flex;flex-wrap:wrap;justify-content:center}
+.bk .g,.in.g{background:var(--food);border-color:transparent}
+.ing{display:flex;flex-wrap:wrap;justify-content:center;margin:8px 0}
+.in{background:var(--cell)}
+.stp{display:flex;align-items:center;gap:10px;text-align:left;padding:10px;border-radius:12px;margin:6px 0;background:var(--cell);opacity:.5}
+.stp.on{opacity:1;outline:2px solid var(--ac)}
+.stp.dn{opacity:1;background:var(--food)}
+.bounce{animation:bn .6s}@keyframes bn{40%{transform:scale(1.25) rotate(-6deg)}}
+.st{animation:sm 1.4s infinite}@keyframes sm{50%{opacity:.3;transform:translateY(-6px)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
