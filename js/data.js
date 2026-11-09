@@ -43,3 +43,40 @@ const RESERVA=[
 ["Cebolla cabezona","🧅","Cebolla caramelizada","cebolla cabezona, aceite, azúcar, sal","Corta en tiras finas|Cocina a fuego bajo 20 minutos con una pizca de azúcar|Sirve sobre arroz, arepa o carne"],
 ["Melón","🍈","Paletas de melón","melón, limón, miel","Pela, quita las semillas y licúa con limón y miel|Vierte en moldes con palito|Congela 4 horas"]
 ];
+
+// Cómo escogerla y guardarla (clave = nombre del vegetal en F)
+const TR={
+"Brócoli":"Elige cabezas verde oscuro y firmes; guárdalo en la nevera, sin lavar, hasta 5 días.",
+"Arracacha":"Escógela firme y sin manchas negras; dura una semana en lugar fresco.",
+"Guatila":"Prefiere las firmes y verde claro; en la nevera duran cerca de una semana.",
+"Alcachofa":"Elige las cerradas y pesadas; guárdalas en la nevera hasta 5 días.",
+"Pimentón":"Elige los lisos y brillantes; en la nevera duran hasta 10 días.",
+"Zuquini":"Los pequeños son más tiernos; guárdalo en la nevera hasta 5 días.",
+"Calabaza":"Escógela pesada y sin golpes; entera dura semanas en un lugar fresco.",
+"Cilantro":"Guárdalo con los tallos en un vaso con agua, en la nevera.",
+"Berenjena":"Elige las firmes y de piel brillante; úsala en 3 o 4 días.",
+"Remolacha":"Elige las firmes y sin arrugas; en la nevera duran 2 semanas.",
+"Ñame":"Debe estar duro y sin partes blandas; guárdalo en un lugar fresco y seco.",
+"Rábano":"Elige los firmes y sin grietas; quítales las hojas y guárdalos en la nevera.",
+"Espinaca":"Lávala bien con agua; en la nevera dura 3 o 4 días.",
+"Habas":"Las vainas deben ser firmes y verdes; desgránalas justo antes de cocinar.",
+"Nabos":"Elige los pequeños y firmes; en la nevera duran 1 o 2 semanas.",
+"Acelga":"Usa también los tallos: pícalos y cocínalos un poco más que las hojas.",
+"Ahuyama":"Escógela pesada y de cáscara dura; entera aguanta semanas.",
+"Guascas":"Guárdalas secas en un frasco cerrado; con poquito aroma rinde bastante.",
+"Repollo":"Elige uno pesado y compacto; en la nevera dura hasta 2 semanas.",
+"Tomate":"Madura mejor fuera de la nevera; guárdalo en ella solo cuando ya esté maduro.",
+"Aguacate":"Si cede un poquito al presionar, está listo; el limón evita que se oscurezca.",
+"Cebolla larga":"Envuélvela en papel y guárdala en la nevera hasta una semana.",
+"Lentejas":"Guárdalas secas en un frasco cerrado; remojarlas acorta la cocción.",
+"Yuca":"Parte la punta: debe ser blanca; si tiene vetas oscuras, no la uses.",
+"Plátano":"Para patacones elige plátano verde y duro.",
+"Papaya":"Está madura cuando la cáscara se ve amarilla y cede al presionar.",
+"Sapote":"Está listo cuando se siente blando al presionar suavemente.",
+"Pitahaya":"Elige la de color parejo que ceda un poquito al presionar.",
+"Champiñones":"Compra solo los de tienda y guárdalos en bolsa de papel, en la nevera.",
+"Piña":"Si huele dulce por la base y las hojas salen con facilidad, está madura.",
+"Pepino":"Elige los firmes y de color parejo; en la nevera duran una semana.",
+"Guanábana":"Está lista cuando cede al presionar; las semillas no se comen ni se licúan.",
+"Pera":"Si está dura, déjala fuera de la nevera hasta que ceda cerca del tallo."
+};

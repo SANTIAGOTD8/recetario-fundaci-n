@@ -4,19 +4,27 @@
 <title>Recetario Aventura</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🥕%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="css/styles.css">
-</head><body><main>
+</head><body>
+<header class="top">
+<div class="tb"><button id="mu" aria-label="Música">🎵</button><button id="sf" aria-label="Sonidos">🔔</button></div>
 <h1>🥕 Recetario Aventura 🍅</h1>
-<p class="mut">Fundación Por un Mañana Mejor · La Gaitana, Suba</p>
-<section id="su"><p>Tira el dado, cae en una fruta o verdura y descubre cómo prepararla. ¿Cuántos jugadores?</p>
-<div><button data-n="1">1</button><button data-n="2" class="on">2</button><button data-n="3">3</button><button data-n="4">4</button></div>
+<p>Fundación Por un Mañana Mejor · La Gaitana, Suba</p>
+</header>
+<main>
+<section id="su" class="card"><p>Tira el dado, cae en una fruta o verdura y descubre cómo prepararla. ¿Cuántos jugadores?</p>
+<div class="np"><button data-n="1">1</button><button data-n="2" class="on">2</button><button data-n="3">3</button><button data-n="4">4</button></div>
 <button class="go" id="gob">¡Empezar!</button></section>
 <section id="gm" hidden>
-<p id="st" aria-live="polite"></p>
-<div class="bw"><div id="g"></div><svg id="ov" viewBox="0 0 100 100"></svg></div>
-<div><button class="go" id="rb">Tirar dado</button><span id="dice" class="dc">🎲</span></div>
-<p class="mut">Casilla verde = ¡receta! · 🪜 sube · 🐛 baja</p>
-<p id="pl" class="mut"></p><button id="bkb"></button><button id="nw">Nuevo juego</button>
-</section></main>
+<p id="st" class="stt" aria-live="polite"></p>
+<div id="pb"></div>
+<div class="bw"><div class="bd"><div id="g"></div><svg id="ov" viewBox="0 0 100 100"></svg><div id="tk"></div><div id="pp" class="pop" hidden></div></div></div>
+<div class="act"><button class="go" id="rb">Tirar dado</button><span id="dice" class="dc">🎲</span></div>
+<div class="pgb" title="Recetas descubiertas"><i id="pg"></i></div>
+<p class="mut">Casilla verde = ¡receta! · 🪜 sube · 🐍 baja · toca una receta descubierta para leerla otra vez</p>
+<p id="pl" class="mut"></p><div><button id="bkb"></button><button id="nw">Nuevo juego</button></div>
+</section>
+<footer class="mut">v2 · diseño huerta · música y recetas con trucos</footer>
+</main>
 <div id="md" hidden><div id="mc" role="dialog" aria-modal="true" aria-label="Receta"><div id="mb"></div></div></div>
 <script src="js/data.js"></script>
 <script src="js/game.js"></script>

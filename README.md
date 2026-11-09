@@ -11,11 +11,17 @@ pensado para madres y padres que no saben cómo usar ciertos ingredientes.
 3. Las recetas descubiertas quedan en **Mi recetario** y las cocinadas llenan **Tu plato** (se guardan en el navegador).
 4. Gana quien llegue exacto a la casilla 100.
 
+## Novedades v2
+- Diseño "huerta": marco de madera, escaleras con peldaños, serpientes, fichas que se deslizan.
+- Música de fondo generada con Web Audio (botón 🎵) y efectos (botón 🔔). No usa archivos de audio.
+- Más interacción: avisos al subir/bajar, vibración en el celular, confeti al ganar, toca una receta descubierta para leerla.
+- Recetas con tiempo, dificultad y "Cómo escogerla y guardarla".
+
 ## Estructura
 ```
 index.html      # Marcado de la página
 css/styles.css  # Estilos (modo claro y oscuro automático)
-js/data.js      # Recetas (F) y recetas de reserva (RESERVA)
+js/data.js      # Recetas (F), reserva (RESERVA) y trucos (TR)
 js/game.js      # Tablero, dado, turnos, modo cocinar, recetario
 ```
 
