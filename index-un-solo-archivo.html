@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Recetario Aventura</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🥕%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#eceee1;--card:#fbfaf3;--ink:#2b2f26;--mut:#6c725f;
+  --cellA:#f3eedb;--cellB:#e7e3cc;--food:#c9dbb4;--ln:#d6d2b8;--ln2:#bdb89a;
+  --wood:#8d6e47;--wood2:#6f5535;--hd:#3b5a3f;--hdt:#f4f1e1;
+  --ac:#3f6e45;--ac2:#2c4f31;--on-ac:#fff;--snk:#b9705f;
+  color-scheme:light;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#161913;--card:#22261d;--ink:#e9e6d4;--mut:#a4a88f;
+  --cellA:#2b2f23;--cellB:#252920;--food:#38502f;--ln:#3a3e30;--ln2:#4a4f3c;
+  --wood:#6d5436;--wood2:#4a3a24;--hd:#1f2b1e;--hdt:#e9e6d4;
+  --ac:#8fbb84;--ac2:#69965f;--on-ac:#12160e;--snk:#c27b69;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#161913;--card:#22261d;--ink:#e9e6d4;--mut:#a4a88f;
+  --cellA:#2b2f23;--cellB:#252920;--food:#38502f;--ln:#3a3e30;--ln2:#4a4f3c;
+  --wood:#6d5436;--wood2:#4a3a24;--hd:#1f2b1e;--hdt:#e9e6d4;
+  --ac:#8fbb84;--ac2:#69965f;--on-ac:#12160e;--snk:#c27b69;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-rounded,"SF Pro Rounded","Trebuchet MS",system-ui,sans-serif;text-align:center;line-height:1.45}
+main{max-width:820px;margin:auto;padding:10px 8px 24px}
+h1{margin:4px 0;font-size:clamp(1.35rem,5vw,2rem);letter-spacing:-.01em}
+h2{margin:6px 0}h3{margin:4px 0 8px;font-weight:600}
+.mut{color:var(--mut);font-size:.88rem;margin:8px 0}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:20px;padding:18px 14px;margin-top:14px}
+
+/* Cabecera */
+.top{position:relative;background:var(--hd);color:var(--hdt);padding:12px 12px 18px;border-radius:0 0 28px 28px}
+.top p{margin:0;font-size:.85rem;opacity:.8}
+.tb{position:absolute;top:8px;right:8px;display:flex}
+.tb button{background:transparent;border:0;box-shadow:none;color:inherit;font-size:1.3rem;padding:.2em .35em;margin:0}
+
+/* Botones: se hunden al presionar */
+button{font:inherit;font-weight:600;color:var(--ink);background:var(--card);border:1px solid var(--ln);border-bottom:3px solid var(--ln2);border-radius:14px;padding:.5em 1.1em;margin:4px;cursor:pointer;transition:transform .08s,filter .15s}
+button:hover{filter:brightness(.97)}
+button:active{transform:translateY(2px);border-bottom-width:1px}
+button:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+button.on,.go{background:var(--ac);color:var(--on-ac);border-color:var(--ac);border-bottom-color:var(--ac2)}
+.go{font-size:1.1rem;padding:.55em 1.6em}
+.np button{min-width:3em}
+
+/* Jugadores y estado */
+.stt{margin:12px 0 4px;font-weight:600}
+#pb{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0 10px}
+.pc{display:flex;gap:6px;align-items:center;padding:4px 12px;border-radius:14px;background:var(--card);border:1px solid var(--ln);opacity:.6;transition:transform .2s,opacity .2s}
+.pc.on{opacity:1;outline:2px solid var(--ac);transform:scale(1.06)}
+.pc span{font-size:1.3rem}
+
+/* Tablero con marco de madera */
+.bw{width:min(100%,78vh);margin:0 auto;padding:clamp(5px,1.6vw,12px);background:var(--wood);border-radius:20px;border-bottom:4px solid var(--wood2)}
+.bd{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden}
+#g{display:grid;grid-template:repeat(10,1fr)/repeat(10,1fr);height:100%}
+.c{position:relative;display:flex;align-items:center;justify-content:center;background:var(--cellA);border:.5px solid var(--ln);overflow:hidden}
+.c.a{background:var(--cellB)}
+.c.f{background:var(--food);cursor:pointer}
+.c small{position:absolute;top:1px;left:3px;font-size:clamp(7px,2vw,11px);color:var(--mut);opacity:.85}
+.em{font-size:clamp(18px,6.6vw,44px);line-height:1}
+.c.f.d::after{content:"✓";position:absolute;top:0;right:3px;font-size:clamp(8px,2.4vw,13px);color:var(--ac);font-weight:700}
+#ov,#tk{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.lad line{stroke:var(--wood);stroke-width:.7;stroke-linecap:round}
+.lad .rg{stroke-width:.55;opacity:.85}
+.sn{fill:none;stroke:var(--snk);stroke-width:2.1;stroke-linecap:round;opacity:.92}
+.sn2{fill:none;stroke:#ead9b6;stroke-width:.5;stroke-dasharray:1.2 2;stroke-linecap:round;opacity:.8}
+.hd{fill:var(--snk)}.ey{fill:#22261d}
+
+/* Fichas que se deslizan */
+.tk{position:absolute;transform:translate(-50%,-50%);font-size:clamp(16px,6.2vw,36px);line-height:1;transition:left .22s ease,top .22s ease;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35));z-index:3}
+.tk.me{animation:bob .9s ease-in-out infinite}
+@keyframes bob{50%{margin-top:-4px}}
+.pop{position:absolute;left:50%;top:42%;z-index:5;transform:translate(-50%,-50%);background:var(--card);color:var(--ink);padding:10px 20px;border-radius:18px;font-weight:700;font-size:clamp(1rem,4vw,1.6rem);box-shadow:0 6px 20px rgba(0,0,0,.3);white-space:nowrap}
+.pp2{animation:pp 1.4s ease forwards}
+@keyframes pp{0%{transform:translate(-50%,-50%) scale(.5);opacity:0}18%{transform:translate(-50%,-50%) scale(1.08);opacity:1}30%{transform:translate(-50%,-50%) scale(1)}85%{opacity:1}100%{transform:translate(-50%,-60%) scale(1);opacity:0}}
+
+/* Barra de acción */
+.act{display:flex;align-items:center;justify-content:center;gap:14px;margin:14px auto 6px;padding:8px 16px;width:max-content;max-width:100%;background:var(--card);border:1px solid var(--ln);border-radius:22px;position:sticky;bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:4;box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.dc{font-size:3rem;line-height:1;display:inline-block}
+.rl{animation:rl .6s}@keyframes rl{to{transform:rotate(720deg)}}
+.pgb{height:8px;max-width:360px;margin:10px auto;border-radius:6px;background:var(--cellB);overflow:hidden}
+.pgb i{display:block;height:100%;width:0;background:var(--ac);transition:width .4s}
+
+/* Receta */
+[hidden]{display:none!important}
+#md{position:fixed;inset:0;z-index:20;background:rgba(22,24,18,.55);display:flex;align-items:center;justify-content:center;padding:14px}
+#mc{background:var(--card);border-radius:22px;max-width:460px;width:100%;max-height:88vh;overflow:auto;padding:20px 18px;box-shadow:0 10px 36px rgba(0,0,0,.3);animation:mi .25s ease}
+@keyframes mi{from{transform:translateY(16px);opacity:0}}
+.big{font-size:3.4rem;line-height:1.1}
+ol{text-align:left;padding-left:1.4em}li{margin:6px 0}
+.chips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:6px 0 10px}
+.chips span{background:var(--cellA);border:1px solid var(--ln);padding:2px 10px;border-radius:999px;font-size:.85rem}
+.tip{background:var(--food);padding:10px 12px;border-radius:14px;text-align:left;font-size:.92rem}
+.bk{display:flex;flex-wrap:wrap;justify-content:center}
+.bk .g,.in.g{background:var(--food);border-color:transparent}
+.ing{display:flex;flex-wrap:wrap;justify-content:center;margin:8px 0}
+.in{background:var(--cellA)}
+.stp{display:flex;align-items:center;gap:10px;text-align:left;padding:10px;border-radius:14px;margin:6px 0;background:var(--cellA);opacity:.5}
+.stp.on{opacity:1;outline:2px solid var(--ac)}
+.stp.dn{opacity:1;background:var(--food)}
+.bounce{animation:bn .6s}@keyframes bn{40%{transform:scale(1.25) rotate(-6deg)}}
+.st{animation:sm 1.4s infinite}@keyframes sm{50%{opacity:.3;transform:translateY(-6px)}}
+.cf{position:fixed;top:-40px;z-index:50;pointer-events:none;animation:fall 3s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head><body>
+<header class="top">
+<div class="tb"><button id="mu" aria-label="Música">🎵</button><button id="sf" aria-label="Sonidos">🔔</button></div>
+<h1>🥕 Recetario Aventura 🍅</h1>
+<p>Fundación Por un Mañana Mejor · La Gaitana, Suba</p>
+</header>
+<main>
+<section id="su" class="card"><p>Tira el dado, cae en una fruta o verdura y descubre cómo prepararla. ¿Cuántos jugadores?</p>
+<div class="np"><button data-n="1">1</button><button data-n="2" class="on">2</button><button data-n="3">3</button><button data-n="4">4</button></div>
+<button class="go" id="gob">¡Empezar!</button></section>
+<section id="gm" hidden>
+<p id="st" class="stt" aria-live="polite"></p>
+<div id="pb"></div>
+<div class="bw"><div class="bd"><div id="g"></div><svg id="ov" viewBox="0 0 100 100"></svg><div id="tk"></div><div id="pp" class="pop" hidden></div></div></div>
+<div class="act"><button class="go" id="rb">Tirar dado</button><span id="dice" class="dc">🎲</span></div>
+<div class="pgb" title="Recetas descubiertas"><i id="pg"></i></div>
+<p class="mut">Casilla verde = ¡receta! · 🪜 sube · 🐍 baja · toca una receta descubierta para leerla otra vez</p>
+<p id="pl" class="mut"></p><div><button id="bkb"></button><button id="nw">Nuevo juego</button></div>
+</section>
+<footer class="mut">v2 · diseño huerta · música y recetas con trucos</footer>
+</main>
+<div id="md" hidden><div id="mc" role="dialog" aria-modal="true" aria-label="Receta"><div id="mb"></div></div></div>
+<script>
+// Recetas: [vegetal, emoji, nombre, ingredientes (", "), pasos ("|")]
+// Se colocan en las casillas 3, 6, 9... 99 (33 casillas). Se invierte para que la primera quede en la 3.
+const F=[
+["Brócoli","🥦","Arbolitos con queso","brócoli, queso rallado, sal","Lava y separa el brócoli en arbolitos|Hiérvelo 4 minutos en agua con sal|Escúrrelo y cúbrelo con queso hasta que se derrita"],
+["Arracacha","🥔","Puré de arracacha","arracacha, mantequilla, leche, sal","Pela y corta en trozos|Cocina 20 minutos hasta que esté blanda|Machaca con mantequilla, leche y sal"],
+["Guatila","🥒","Guatila con hogao","guatila, cebolla, tomate, sal","Pela y quita la semilla|Cocínala en agua 10 minutos|Mézclala con cebolla y tomate sofritos"],
+["Alcachofa","🌱","Alcachofa con limón","alcachofa, limón, sal, mayonesa","Hierve 30 minutos con sal y limón|Arranca las hojas una a una|Moja la base de cada hoja en mayonesa y raspa con los dientes"],
+["Pimentón","🫑","Pimentón relleno","pimentón, arroz cocido, queso","Corta la tapa y saca las semillas|Rellena con arroz y queso|Cocina tapado en la estufa a fuego bajo 10 minutos"],
+["Zuquini","🥒","Tortitas de zuquini","zuquini, huevo, harina, sal","Ralla el zuquini y exprime el agua|Mezcla con huevo, harina y sal|Dora cucharadas en sartén con poquito aceite"],
+["Calabaza","🎃","Sopa de calabaza","calabaza, cebolla, caldo, leche","Pica y cocina con cebolla en caldo 15 minutos|Licúa hasta que quede cremosa|Agrega un chorrito de leche y sirve caliente"],
+["Cilantro","🌿","Salsa verde","cilantro, cebolla, limón, sal","Lava y pica el cilantro y la cebolla|Mezcla con limón y sal|Sírvela sobre arroz, papa o huevo"],
+["Berenjena","🍆","Berenjena con queso","berenjena, tomate, queso, sal, aceite","Corta en rodajas y ponles sal 10 minutos|Fríe las rodajas 3 minutos por lado|Cubre con tomate y queso y tapa la sartén 3 minutos"],
+["Remolacha","🟣","Ensalada rosada","remolacha, zanahoria, limón, sal","Cocina la remolacha 30 minutos, pela y deja enfriar|Ralla con la zanahoria|Aliña con limón y sal"],
+["Ñame","🍠","Tortitas de ñame","ñame, queso, sal","Pela y cocina el ñame hasta que esté blando|Machaca con queso y sal|Forma tortitas y dóralas en sartén"],
+["Rábano","🌸","Rábano crujiente","rábano, limón, sal","Lava y corta en rodajas finas|Mezcla con limón y sal|Sírvelo con arroz o en ensalada"],
+["Espinaca","🥬","Huevo con espinaca","espinaca, huevos, cebolla, sal","Lava y pica la espinaca|Sofríe con cebolla 2 minutos|Agrega los huevos batidos y revuelve"],
+["Habas","🫘","Habas con papa","habas, papa, cebolla, sal","Desgrana las habas|Cocínalas con la papa 20 minutos|Mezcla con cebolla sofrita"],
+["Nabos","🥔","Sopa de nabo","nabo, papa, zanahoria, caldo, cilantro","Pela y pica las verduras|Hierve en caldo 20 minutos|Sirve con cilantro picado"],
+["Acelga","🥬","Arroz con acelga","acelga, arroz, cebolla, sal","Pica la acelga y la cebolla|Sofríe la cebolla, agrega arroz y agua|Añade la acelga al final y cocina 5 minutos"],
+["Ahuyama","🎃","Bolitas de ahuyama","ahuyama, queso, harina, sal","Cocina y machaca la ahuyama|Mezcla con queso, harina y sal|Haz bolitas y dóralas en sartén con poquito aceite"],
+["Guascas","🌿","Ajiaco sencillo","guascas, papas, pollo, mazorca, sal","Cocina el pollo y las papas en agua|Agrega la mazorca y las guascas|Cocina 30 minutos y sirve con crema"],
+["Repollo","🥬","Ensalada de repollo","repollo, zanahoria, limón, sal","Pica el repollo fino y ralla la zanahoria|Mezcla las dos|Aliña con limón y sal"],
+["Tomate","🍅","Salsa de tomate casera","tomate, cebolla, ajo, sal","Pica todo|Cocina 15 minutos|Aplasta o licúa y sirve con arroz o pasta"],
+["Aguacate","🥑","Guacamole","aguacate, tomate, limón, sal","Aplasta el aguacate|Mezcla con tomate picado, limón y sal|Come con arepa o galletas"],
+["Cebolla larga","🧅","Hogao colombiano","cebolla larga, tomate, sal","Pica la cebolla y el tomate|Sofríe 10 minutos a fuego bajo|Sirve sobre arroz, papa o huevo"],
+["Lentejas","🫘","Lentejas con verduras","lentejas, zanahoria, cebolla, papa","Remoja las lentejas 1 hora|Cocina 40 minutos con las verduras|Sirve con arroz"],
+["Yuca","🍠","Palitos de yuca","yuca, sal, aceite","Pela, quita el centro duro y corta en palitos|Hierve 20 minutos hasta que estén blandos (la yuca cruda no se come)|Fríe hasta dorar en poquito aceite"],
+["Plátano","🍌","Patacones","plátano verde, sal, aceite","Pela y corta en trozos gruesos|Fríe 3 minutos|Aplasta, sala y fríe de nuevo hasta dorar"],
+["Papaya","🥭","Batido de papaya","papaya, leche, azúcar o miel","Pela y quita las semillas|Licúa con leche y un poquito de azúcar|Sirve bien frío"],
+["Sapote","🍊","Crema de sapote","sapote, leche, hielo","Saca la pulpa y quita las semillas|Licúa con leche y hielo|Sirve en vasos"],
+["Pitahaya","🐉","Copa de pitahaya","pitahaya, yogur, banano","Corta la pitahaya y saca la pulpa en cubos|Pica el banano|Mezcla con yogur en un vaso"],
+["Champiñones","🍄","Champiñones salteados","champiñones, ajo, mantequilla, sal","Límpialos con un paño húmedo (compra solo los de tienda, nunca hongos del campo)|Córtalos en láminas|Saltea 5 minutos con ajo y mantequilla"],
+["Piña","🍍","Piña asada con canela","piña, canela, miel","Pela y corta en rodajas|Espolvorea canela y un chorrito de miel|Dora en sartén 3 minutos por lado"],
+["Pepino","🥒","Agua fresca de pepino","pepino, limón, agua, azúcar, hierbabuena","Pela y corta el pepino|Licúa con agua, limón y azúcar|Cuela y sirve con hielo y hierbabuena"],
+["Guanábana","🍈","Jugo de guanábana","guanábana, leche, azúcar","Saca la pulpa y quita TODAS las semillas|Licúa con leche y azúcar|Sirve bien frío"],
+["Pera","🍐","Pera con canela","pera, canela, miel, agua","Corta en trozos y saca el centro|Cocina en una olla con un poquito de agua, canela y miel 10 minutos|Sirve tibia o fría"]
+].reverse();
+
+
+// Recetas de reserva sin casilla. Para usarlas, muévelas a F (el tablero tiene 33 casillas de receta).
+const RESERVA=[
+["Apio","🌿","Palitos de apio rellenos","apio, queso crema, pasas","Lava y corta el apio en palitos|Rellénalos con queso crema|Decora con pasas"],
+["Cebolla cabezona","🧅","Cebolla caramelizada","cebolla cabezona, aceite, azúcar, sal","Corta en tiras finas|Cocina a fuego bajo 20 minutos con una pizca de azúcar|Sirve sobre arroz, arepa o carne"],
+["Melón","🍈","Paletas de melón","melón, limón, miel","Pela, quita las semillas y licúa con limón y miel|Vierte en moldes con palito|Congela 4 horas"]
+];
+
+// Cómo escogerla y guardarla (clave = nombre del vegetal en F)
+const TR={
+"Brócoli":"Elige cabezas verde oscuro y firmes; guárdalo en la nevera, sin lavar, hasta 5 días.",
+"Arracacha":"Escógela firme y sin manchas negras; dura una semana en lugar fresco.",
+"Guatila":"Prefiere las firmes y verde claro; en la nevera duran cerca de una semana.",
+"Alcachofa":"Elige las cerradas y pesadas; guárdalas en la nevera hasta 5 días.",
+"Pimentón":"Elige los lisos y brillantes; en la nevera duran hasta 10 días.",
+"Zuquini":"Los pequeños son más tiernos; guárdalo en la nevera hasta 5 días.",
+"Calabaza":"Escógela pesada y sin golpes; entera dura semanas en un lugar fresco.",
+"Cilantro":"Guárdalo con los tallos en un vaso con agua, en la nevera.",
+"Berenjena":"Elige las firmes y de piel brillante; úsala en 3 o 4 días.",
+"Remolacha":"Elige las firmes y sin arrugas; en la nevera duran 2 semanas.",
+"Ñame":"Debe estar duro y sin partes blandas; guárdalo en un lugar fresco y seco.",
+"Rábano":"Elige los firmes y sin grietas; quítales las hojas y guárdalos en la nevera.",
+"Espinaca":"Lávala bien con agua; en la nevera dura 3 o 4 días.",
+"Habas":"Las vainas deben ser firmes y verdes; desgránalas justo antes de cocinar.",
+"Nabos":"Elige los pequeños y firmes; en la nevera duran 1 o 2 semanas.",
+"Acelga":"Usa también los tallos: pícalos y cocínalos un poco más que las hojas.",
+"Ahuyama":"Escógela pesada y de cáscara dura; entera aguanta semanas.",
+"Guascas":"Guárdalas secas en un frasco cerrado; con poquito aroma rinde bastante.",
+"Repollo":"Elige uno pesado y compacto; en la nevera dura hasta 2 semanas.",
+"Tomate":"Madura mejor fuera de la nevera; guárdalo en ella solo cuando ya esté maduro.",
+"Aguacate":"Si cede un poquito al presionar, está listo; el limón evita que se oscurezca.",
+"Cebolla larga":"Envuélvela en papel y guárdala en la nevera hasta una semana.",
+"Lentejas":"Guárdalas secas en un frasco cerrado; remojarlas acorta la cocción.",
+"Yuca":"Parte la punta: debe ser blanca; si tiene vetas oscuras, no la uses.",
+"Plátano":"Para patacones elige plátano verde y duro.",
+"Papaya":"Está madura cuando la cáscara se ve amarilla y cede al presionar.",
+"Sapote":"Está listo cuando se siente blando al presionar suavemente.",
+"Pitahaya":"Elige la de color parejo que ceda un poquito al presionar.",
+"Champiñones":"Compra solo los de tienda y guárdalos en bolsa de papel, en la nevera.",
+"Piña":"Si huele dulce por la base y las hojas salen con facilidad, está madura.",
+"Pepino":"Elige los firmes y de color parejo; en la nevera duran una semana.",
+"Guanábana":"Está lista cuando cede al presionar; las semillas no se comen ni se licúan.",
+"Pera":"Si está dura, déjala fuera de la nevera hasta que ceda cerca del tallo."
+};
+
+// Ninguna escalera ni serpiente empieza en múltiplo de 3 (esas casillas son de receta).
+const L={4:23,8:29,20:41,34:56,50:71,67:86,80:99},S={98:79,92:71,64:43,55:35,49:26,31:11};
+const FC={};F.forEach((_,i)=>{FC[(i+1)*3]=i});
+const $=id=>document.getElementById(id),sleep=ms=>new Promise(r=>setTimeout(r,ms)),EM=['🐸','🐰','🐻','🦊'];
+let np=2,P=[],t=0,busy=0,got=new Set;
+let ck=new Set;try{got=new Set(JSON.parse(localStorage.getItem('rg')||'[]'));ck=new Set(JSON.parse(localStorage.getItem('rk')||'[]'))}catch(e){}
+const openM=()=>{$('md').hidden=false;const b=$('mb').querySelector('button');if(b)b.focus()};
+const sv=()=>{try{localStorage.setItem('rg',JSON.stringify([...got]));localStorage.setItem('rk',JSON.stringify([...ck]))}catch(e){}};
+let ac,mg,sfx=1,mus=1,mt=0,ms=0,mi=4;try{sfx=localStorage.getItem('rs')!=='0';mus=localStorage.getItem('rm')!=='0'}catch(e){}
+const AC=()=>{if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();mg=ac.createGain();mg.gain.value=.5;mg.connect(ac.destination)}if(ac.state==='suspended')ac.resume();return ac};
+const tone=(f,t0,d,v,ty)=>{const a=AC(),o=a.createOscillator(),g=a.createGain();o.type=ty||'sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,t0);g.gain.linearRampToValueAtTime(v,t0+.02);g.gain.exponentialRampToValueAtTime(.0001,t0+d);o.connect(g);g.connect(mg);o.start(t0);o.stop(t0+d+.05)};
+const beep=(f,d)=>{if(!sfx)return;try{tone(f,AC().currentTime,d+.1,.12,'triangle')}catch(e){}};
+// Música: melodía pentatónica suave que se genera sola, sobre un bajo C-Am-F-G
+const PEN=[262,294,330,392,440,523,587,659,784],BASS=[131,110,175,196];
+function musicTick(){try{const t0=AC().currentTime+.05;
+if(ms%8===0){const r=BASS[(ms/8)%4];tone(r,t0,1.7,.1,'sine');tone(r*2,t0,1.7,.04,'sine')}
+if(ms%2===0||Math.random()<.3){mi=Math.max(0,Math.min(PEN.length-1,mi+[-2,-1,-1,0,1,1,2][Math.floor(Math.random()*7)]));tone(PEN[mi],t0,.6,.07,'triangle')}
+ms++}catch(e){}}
+function musicSet(on){mus=on;try{localStorage.setItem('rm',on?'1':'0')}catch(e){}clearInterval(mt);mt=0;$('mu').textContent=on?'🎵':'🔇';if(on&&!document.hidden){mt=setInterval(musicTick,230);musicTick()}}
+const pos=n=>{const r=Math.floor((n-1)/10),k=(n-1)%10,c=r%2?9-k:k;return[c*10+5,(9-r)*10+5]};
+let o='';
+for(const[a,b]of Object.entries(L)){const[x1,y1]=pos(+a),[x2,y2]=pos(b),dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy),nx=-dy/len*1.4,ny=dx/len*1.4,n=Math.floor(len/3.4);
+o+=`<g class="lad"><line x1="${x1+nx}" y1="${y1+ny}" x2="${x2+nx}" y2="${y2+ny}"/><line x1="${x1-nx}" y1="${y1-ny}" x2="${x2-nx}" y2="${y2-ny}"/>`;
+for(let i=1;i<n;i++){const k=i/n;o+=`<line class="rg" x1="${x1+dx*k+nx}" y1="${y1+dy*k+ny}" x2="${x1+dx*k-nx}" y2="${y1+dy*k-ny}"/>`}o+='</g>'}
+for(const[a,b]of Object.entries(S)){const[x1,y1]=pos(+a),[x2,y2]=pos(b),dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy)||1,px=-dy/len*6,py=dx/len*6,d=`M${x1} ${y1}Q${x1+dx*.25+px} ${y1+dy*.25+py} ${x1+dx*.5} ${y1+dy*.5}T${x2} ${y2}`;
+o+=`<path class="sn" d="${d}"/><path class="sn2" d="${d}"/><circle class="hd" cx="${x1}" cy="${y1}" r="2.4"/><circle class="ey" cx="${x1-.9}" cy="${y1-.6}" r=".5"/><circle class="ey" cx="${x1+.9}" cy="${y1-.6}" r=".5"/>`}
+$('ov').innerHTML=o;
+const OFF=[[-2.4,-2.4],[2.4,-2.4],[-2.4,2.4],[2.4,2.4]];
+function build(){let h='';for(let r=9;r>=0;r--)for(let c=0;c<10;c++){const n=r*10+(r%2?10-c:c+1),f=FC[n];h+=`<div class="c${f!=null?' f':''}${(r+c)%2?' a':''}"${f!=null?` data-i="${f}" title="${F[f][0]}"`:''}><small>${n}</small>${f!=null?`<span class="em">${F[f][1]}</span>`:''}</div>`}$('g').innerHTML=h}
+function draw(){P.forEach((p,i)=>{if(!p.el){p.el=document.createElement('span');p.el.className='tk';p.el.textContent=p.e;$('tk').appendChild(p.el)}
+const[x,y]=pos(p.pos),sh=P.filter(q=>q.pos==p.pos).length>1?OFF[i]:[0,0];p.el.style.left=(x+sh[0])+'%';p.el.style.top=(y+sh[1])+'%';p.el.classList.toggle('me',i==t)});
+document.querySelectorAll('.c.f').forEach(c=>c.classList.toggle('d',got.has(+c.dataset.i)));
+$('pb').innerHTML=P.map((p,i)=>`<div class="pc${i==t?' on':''}"><span>${p.e}</span><b>${p.pos}</b></div>`).join('')}
+const turn=()=>{$('st').textContent=`Turno de ${P[t].n}`;draw()},msg=x=>$('st').textContent=x,cnt=()=>{$('pg').style.width=got.size/F.length*100+'%';$('bkb').textContent=`📖 Mi recetario (${got.size}/${F.length})`;$('pl').textContent=ck.size?'🍽️ Tu plato: '+[...ck].map(i=>F[i][1]).join(' '):'🍽️ Cocina una receta para llenar tu plato'};
+const tts=s=>{if(!window.speechSynthesis)return;speechSynthesis.cancel();if(s){const u=new SpeechSynthesisUtterance(s);u.lang='es-CO';speechSynthesis.speak(u)}};
+function recipe(i,mark){return new Promise(res=>{
+const[f,e,ti,ing,st]=F[i],ps=st.split('|'),is=ing.split(', '),ad=new Set,
+tp=/Licúa/.test(st)?'🥤 Con licuadora':/cocin|cocín|hierv|hiérv|fríe|sofr|dora|saltea/i.test(st)?'🔥 Con estufa':'🥣 Sin estufa',mn=ps.reduce((a,x)=>a+ +((x.match(/(\d+) minuto/)||[])[1]||0),0)||5,lv=mn<=20?'🟢 Fácil':'🟡 Media';
+let k=0,tm=0;
+const close=()=>{clearInterval(tm);tts();$('md').hidden=true;res()};
+const fin=()=>{ck.add(i);got.add(i);sv();cnt();close()};
+const info=()=>{clearInterval(tm);$('mb').innerHTML=`<div class="big">${e}</div><h2>${f}</h2><h3>${ti}</h3><div class="chips"><span>${tp}</span><span>⏱ ${mn} min</span><span>${lv}</span></div><p><b>Ingredientes:</b> ${ing}</p><ol>${ps.map(s=>`<li>${s}</li>`).join('')}</ol>${TR[f]?`<p class="tip">🛒 <b>Cómo escogerla y guardarla:</b> ${TR[f]}</p>`:''}<p class="mut">👩‍🍳 Pide ayuda a un adulto para cuchillos y estufa. Lava bien tus manos y los alimentos.</p><button id="sp">🔊 Escuchar</button><button id="cb" class="go">👩‍🍳 ¡Cocinar!</button><button id="ok">${mark?'Guardar y seguir':'Cerrar'}</button>`;
+$('sp').onclick=()=>tts(`${ti}. Ingredientes: ${ing}. Pasos: ${ps.join('. ')}`);
+$('cb').onclick=()=>{tts();cook()};
+$('ok').onclick=()=>{if(mark){got.add(i);sv();cnt()}close()}};
+const cook=()=>{clearInterval(tm);
+const all=ad.size>=is.length,end=k>=ps.length,m=end?0:+((ps[k].match(/(\d+) minuto/)||[])[1]||0);
+let h=`<div class="big" id="bf">${e}</div><h3>${ti}</h3>`;
+if(end)h+=`<div class="big">🎉🍽️</div><h2>¡Plato listo!</h2><p>Ya sabes preparar ${f.toLowerCase()}. ¡Ahora cocínalo de verdad y compártelo!</p><button id="dn" class="go">Cerrar</button>`;
+else if(!all)h+=`<p><b>Alista los ingredientes</b> · toca cada uno (${ad.size}/${is.length})</p><div class="ing">${is.map((x,j)=>`<button class="in${ad.has(j)?' g':''}" data-j="${j}">${ad.has(j)?'✅ ':''}${x}</button>`).join('')}</div>`;
+else h+=ps.map((s,j)=>`<div class="stp ${j<k?'dn':j==k?'on':''}"><b>${j<k?'✅':j+1}</b><span>${s}</span></div>`).join('')+(m&&m<=40?`<button id="tb" class="go">⏱ Iniciar ${m} min</button>`:`<button id="nx" class="go">Hecho ✅</button>`);
+if(!end)h+=`<br><button id="bk">⬅ Volver</button>`;
+$('mb').innerHTML=h;$('bf').classList.add('bounce');
+if(end){beep(523,.15);setTimeout(()=>beep(784,.3),160);$('dn').onclick=fin}
+document.querySelectorAll('.ing .in').forEach(b=>b.onclick=()=>{ad.add(+b.dataset.j);beep(500,.08);cook()});
+if($('bk'))$('bk').onclick=info;
+if($('nx'))$('nx').onclick=()=>{k++;beep(660,.12);cook()};
+if($('tb'))$('tb').onclick=()=>{let s=m*60;const tb=$('tb');$('bf').insertAdjacentHTML('afterend','<div class="st big">♨️</div>');tm=setInterval(()=>{s--;if(s<=0){beep(880,.5);k++;cook()}else tb.textContent=`🔥 ${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} · toca para saltar`},1000);tb.textContent=`🔥 ${m}:00 · toca para saltar`;tb.onclick=()=>{k++;beep(660,.12);cook()}}};
+info();openM()})}
+function book(){$('mb').innerHTML=`<h2>📖 Mi recetario (${got.size}/${F.length})</h2><p class="mut">Toca una comida para leer su receta. ⭐ descubierta · 🍳 cocinada.</p><div class="bk">${F.map((f,i)=>`<button data-i="${i}" class="${got.has(i)?'g':''}">${f[1]} ${f[0]}${ck.has(i)?' 🍳':got.has(i)?' ⭐':''}</button>`).join('')}</div><button id="ok" class="go">Cerrar</button>`;
+openM();$('ok').onclick=()=>$('md').hidden=true;
+document.querySelectorAll('.bk button').forEach(b=>b.onclick=async()=>{await recipe(+b.dataset.i,false);book()})}
+function win(p){busy=0;$('mb').innerHTML=`<div class="big">🏆</div><h2>¡${p.n} ganó!</h2><p>Descubrieron ${got.size} de ${F.length} recetas. ¡Ahora a cocinar en familia!</p><button id="ag" class="go">Jugar otra vez</button>`;openM();confetti();[523,659,784,1047].forEach((x,i)=>setTimeout(()=>beep(x,.25),i*160));$('ag').onclick=()=>{$('md').hidden=true;start()}}
+async function roll(){if(busy)return;busy=1;const p=P[t];let d;$('dice').classList.remove('rl');void $('dice').offsetWidth;$('dice').classList.add('rl');
+for(let i=0;i<8;i++){d=1+Math.floor(Math.random()*6);$('dice').textContent=String.fromCharCode(9855+d);beep(300+i*40,.05);await sleep(70)}
+if(p.pos+d>100)msg('Necesitas el número exacto para llegar al 100 🎯');
+else{for(let i=0;i<d;i++){p.pos++;draw();await sleep(260)}
+const j=L[p.pos]||S[p.pos];
+if(j){const up=!!L[p.pos];msg(up?'🪜 ¡Escalera de la huerta! ¡Subes!':'🐍 ¡Serpiente traviesa! ¡Bajas!');pop(up?'🪜 ¡Subes!':'🐍 ¡Bajas!');vib(up?[30,40,30]:[90]);[0,1,2,3].forEach(i=>setTimeout(()=>beep(up?400+i*120:700-i*120,.1),i*90));await sleep(900);p.el.style.transitionDuration='.7s';p.pos=j;draw();await sleep(800);p.el.style.transitionDuration=''}
+const f=FC[p.pos];if(f!=null){pop(F[f][1]+' '+F[f][0]);vib(40);beep(660,.12);setTimeout(()=>beep(880,.15),130);await sleep(750);await recipe(f,true)}
+if(p.pos==100){win(p);return}}
+await sleep(500);t=(t+1)%P.length;turn();busy=0}
+function start(){P=EM.slice(0,np).map((e,i)=>({e,n:`${e} Jugador ${i+1}`,pos:1}));t=0;busy=0;$('su').hidden=true;$('gm').hidden=false;$('dice').textContent='🎲';$('tk').innerHTML='';build();musicSet(mus);turn();cnt()}
+document.querySelectorAll('#su [data-n]').forEach(b=>b.onclick=()=>{np=+b.dataset.n;document.querySelectorAll('#su [data-n]').forEach(x=>x.classList.toggle('on',x==b))});
+$('gob').onclick=start;$('rb').onclick=roll;$('bkb').onclick=book;$('nw').onclick=()=>{if(busy)return;$('gm').hidden=true;$('su').hidden=false};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('md').hidden){const b=$('mb').querySelector('#ok');if(b)b.click()}});
+
+const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+const pop=x=>{const e=$('pp');e.textContent=x;e.hidden=false;e.classList.remove('pp2');void e.offsetWidth;e.classList.add('pp2');clearTimeout(pop.t);pop.t=setTimeout(()=>e.hidden=true,1400)};
+const confetti=()=>{for(let i=0;i<48;i++){const e=document.createElement('i');e.className='cf';e.textContent=['🥕','🍅','🥦','🍋','⭐','🌽'][i%6];e.style.cssText=`left:${Math.random()*100}vw;animation-delay:${Math.random()*.8}s;font-size:${18+Math.random()*16}px`;document.body.appendChild(e);setTimeout(()=>e.remove(),3600)}};
+$('g').onclick=e=>{const c=e.target.closest('.c.f');if(!c||busy||!P.length)return;const i=+c.dataset.i;got.has(i)?recipe(i,false):pop('🔒 Aún no descubres esta receta')};
+$('mu').onclick=()=>musicSet(!mus);
+$('sf').textContent=sfx?'🔔':'🔕';$('mu').textContent=mus?'🎵':'🔇';
+$('sf').onclick=()=>{sfx=!sfx;$('sf').textContent=sfx?'🔔':'🔕';try{localStorage.setItem('rs',sfx?'1':'0')}catch(e){}};
+document.addEventListener('visibilitychange',()=>{clearInterval(mt);if(!document.hidden&&mus&&mt)mt=setInterval(musicTick,230)});
+new MutationObserver(()=>{if(mg)mg.gain.setTargetAtTime($('md').hidden?.5:.22,ac.currentTime,.2)}).observe($('md'),{attributes:true,attributeFilter:['hidden']});
+</script>
+</body></html>
